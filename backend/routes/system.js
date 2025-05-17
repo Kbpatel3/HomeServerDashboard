@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const os = require('os');
+const { exec } = require('child_process');
 
 router.get('/info', (req, res) => {
     const systemInfo = {
