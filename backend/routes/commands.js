@@ -10,7 +10,7 @@ router.post('/reboot', (req, res) => {
     });
 });
 
-router.post('restart/:service', (req, res) => {
+router.post('/restart/:service', (req, res) => {
     const service = req.params.service;
     exec(`sudo systemctl restart ${service}`, (error, stdout, stderr) => {
         if (error) return res.status(500).json({ error: stderr });
