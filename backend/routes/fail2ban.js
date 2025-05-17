@@ -5,12 +5,14 @@ const { exec } = require('child_process');
 router.get('/status', (req, res) => {
     exec('sudo fail2ban-client status', (error, stdout, stderr) => {
         if (error) {
-            console.error(`Error executing command: ${error}`);
-            return res.status(500).json({ error: 'Failed to get fail2ban status' });
+          console.error('Fail2Ban status error:', error);
+          console.error('stderr:', stderr);
+          return res.status(500).json({ error: 'Failed to get fail2ban status' });
         }
-        const status = stdout.trim();
-        res.json({ status });
-    });
+      
+        console.log('Fail2Ban status stdout:', stdout);
+        res.json({ status: stdout.trim() });
+      });
 });
 
 router.get('/logs', (req, res) => {
