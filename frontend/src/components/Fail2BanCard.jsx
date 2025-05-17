@@ -73,12 +73,15 @@ export default function Fail2BanCard() {
         <h3 className="text-lg font-medium mb-2">Recent Logs</h3>
         <div className="bg-black p-3 rounded-md text-xs font-mono max-h-60 overflow-y-auto border border-zinc-700">
           {logs?.split("\n").map((line, index) => {
-            const isBan = /ban/i.test(line);
             return (
               <div
                 key={index}
                 className={
-                  isBan ? "text-red-400 font-semibold" : "text-zinc-400"
+                  /ban|Ban/.test(line)
+                    ? "text-red-400 font-semibold"
+                    : /Found/.test(line)
+                    ? "text-yellow-400"
+                    : "text-gray-300"
                 }
               >
                 {line}
