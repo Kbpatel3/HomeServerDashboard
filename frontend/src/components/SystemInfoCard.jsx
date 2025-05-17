@@ -4,10 +4,16 @@ export default function SystemInfoCard() {
   const [info, setInfo] = useState(null);
 
   useEffect(() => {
-    fetch("/api/system/info")
-      .then((res) => res.json())
-      .then(setInfo)
-      .catch((err) => console.error("Failed to fetch system info:", err));
+    const fetchInfo = () => {
+      fetch("/api/system/info")
+        .then((res) => res.json())
+        .then(setInfo)
+        .catch((err) => console.error("Failed to fetch system info:", err));
+    };
+
+    fetchInfo(); // initial fetch
+    const interval = setInterval(fetchInfo, 30000); // refresh every 30 sec
+    return () => clearInterval(interval); // cleanup on unmount
   }, []);
 
   if (!info) {
@@ -17,6 +23,15 @@ export default function SystemInfoCard() {
       </div>
     );
   }
+
+  const formatUptime = (seconds) => {
+    const d = Math.floor(seconds / 86400);
+    const h = Math.floor((seconds % 86400) / 3600);
+    const m = Math.floor((seconds % 3600) / 60);
+    const s = seconds % 60;
+
+    return `${d}d ${h}h ${m}m ${s}s`;
+  };
 
   return (
     <div className="p-6 bg-zinc-800 text-white rounded-xl shadow-md">
@@ -34,7 +49,7 @@ export default function SystemInfoCard() {
           label="Free Memory"
           value={`${(info.freeMemory / 1e9).toFixed(1)} GB`}
         />
-        <InfoRow label="Uptime" value={`${Math.floor(info.uptime / 60)} minutes`} />
+        <InfoRow label="Uptime" value={formatUptime(info.uptime)} />
         <InfoRow label="System Time" value={info.time} />
       </div>
     </div>
