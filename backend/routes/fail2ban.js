@@ -3,7 +3,7 @@ const router = express.Router();
 const { exec } = require('child_process');
 
 router.get('/status', (req, res) => {
-    exec('fail2ban-client status', (error, stdout, stderr) => {
+    exec('sudo fail2ban-client status', (error, stdout, stderr) => {
         if (error) {
             console.error(`Error executing command: ${error}`);
             return res.status(500).json({ error: 'Failed to get fail2ban status' });
@@ -14,7 +14,7 @@ router.get('/status', (req, res) => {
 });
 
 router.get('/logs', (req, res) => {
-    exec('tail -n 100 /var/log/fail2ban.log', (error, stdout, stderr) => {
+    exec('sudo tail -n 100 /var/log/fail2ban.log', (error, stdout, stderr) => {
         if (error) {
             console.error(`Error executing command: ${error}`);
             return res.status(500).json({ error: 'Failed to get fail2ban logs' });
