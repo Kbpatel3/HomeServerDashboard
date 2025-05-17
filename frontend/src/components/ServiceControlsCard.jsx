@@ -26,7 +26,9 @@ export default function ServiceControlsCard() {
     try {
       const res = await fetch(`/api/commands/${path}`, { method: "POST" });
       const data = await res.json();
-      if (path === "update") setOutput(data.message || "");
+      if (path === "update" && data.message) {
+        setOutput(data.message);
+      }
       showAlert(data.message || "Command executed successfully.");
     } catch {
       showAlert("Command failed.", "error");
