@@ -69,7 +69,17 @@ router.get("/download-zip", (req, res) => {
     res.setHeader("Content-Type", "application/zip");
   
     const archive = archiver("zip", { zlib: { level: 9 } });
-    archive.directory(dirPath, false);
+  
+    // Only exclude `dashboard` when downloading from the root
+    if (!subPath || subPath === "") {
+      archive.glob("**/*", {
+        cwd: dirPath,
+        ignore: ["dashboard/**"],
+      });
+    } else {
+      archive.directory(dirPath, false);
+    }
+  
     archive.pipe(res);
     archive.finalize();
 });
