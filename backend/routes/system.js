@@ -4,6 +4,7 @@ const os = require('os');
 
 router.get('/info', (req, res) => {
     const systemInfo = {
+        hostname: os.hostname(),
         platform: os.platform(),
         arch: os.arch(),
         release: os.release(),
@@ -11,7 +12,9 @@ router.get('/info', (req, res) => {
         totalMemory: os.totalmem(),
         freeMemory: os.freemem(),
         cpuCount: os.cpus().length,
-        networkInterfaces: os.networkInterfaces()
+        cpuModel: os.cpus()[0].model,
+        networkInterfaces: os.networkInterfaces(),
+        time: new Date().toLocaleString(),
     };
     res.json(systemInfo);
 });
@@ -24,7 +27,28 @@ router.get('/status', (req, res) => {
         free: os.freemem(),
         used: os.totalmem() - os.freemem()
     };
-    res.json({ uptime, load, memory})
-})
+
+    exec("df -h --output=source,size,used,avail,pcent,target -x tmpfs -x devtmpfs", (error, stdout, stderr) => {
+        if (error) {
+            console.error(`exec error: ${error}`);
+            return res.status(500).json({ error: 'Failed to get disk usage', stderr });
+        }
+
+        const lines = stdout.trim().split('\n').slice(1);
+        const disks = lines.map(line => {
+            const parts = line.trim().split(/\s+/);
+            return {
+                filesystem: parts[0],
+                size: parts[1],
+                used: parts[2],
+                available: parts[3],
+                usePercent: parts[4],
+                mountpoint: parts[5]
+            };
+        });
+    });
+
+    res.json({ uptime, load, memory, disks });
+});
 
 module.exports = router;
