@@ -24,32 +24,31 @@ router.get('/status', (req, res) => {
     const uptime = os.uptime();
     const load = os.loadavg();
     const memory = {
-        total: os.totalmem(),
-        free: os.freemem(),
-        used: os.totalmem() - os.freemem()
+      total: os.totalmem(),
+      free: os.freemem(),
+      used: os.totalmem() - os.freemem()
     };
-
-    exec("df -h --output=source,size,used,avail,pcent,target -x tmpfs -x devtmpfs", (error, stdout, stderr) => {
-        if (error) {
-            console.error(`exec error: ${error}`);
-            return res.status(500).json({ error: 'Failed to get disk usage', stderr });
-        }
-
-        const lines = stdout.trim().split('\n').slice(1);
-        const disks = lines.map(line => {
-            const parts = line.trim().split(/\s+/);
-            return {
-                filesystem: parts[0],
-                size: parts[1],
-                used: parts[2],
-                available: parts[3],
-                usePercent: parts[4],
-                mountpoint: parts[5]
-            };
-        });
+  
+    exec("df -h --output=source,size,used,avail,pcent,target -x tmpfs -x devtmpfs", (err, stdout) => {
+      if (err) {
+        return res.status(500).json({ error: 'Failed to get disk usage' });
+      }
+  
+      const lines = stdout.trim().split("\n").slice(1);
+      const disks = lines.map(line => {
+        const parts = line.trim().split(/\s+/);
+        return {
+          filesystem: parts[0],
+          size: parts[1],
+          used: parts[2],
+          available: parts[3],
+          usePercent: parts[4],
+          mountpoint: parts[5]
+        };
+      });
+  
+      res.json({ uptime, load, memory, disks });
     });
-
-    res.json({ uptime, load, memory, disks });
-});
+  });
 
 module.exports = router;
