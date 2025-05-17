@@ -15,7 +15,9 @@ router.get('/list', (req, res) => {
     fs.readdir(targetPath, { withFileTypes: true }, (err, items) => {
         if (err) return res.status(500).json({ error: err.message });
 
-        const files = items.map(item => {
+        const files = items
+        .filter(item => item.name !== 'dashboard')
+        .map(item => {
             const fullPath = path.join(targetPath, item.name);
             const stats = fs.statSync(fullPath);
             return {
