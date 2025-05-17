@@ -29,19 +29,25 @@ export default function SystemStatusCard() {
   };
 
   return (
-    <div className="p-4 bg-gray-800 text-white rounded shadow-md">
-      <h2 className="text-lg font-bold mb-2">System Status</h2>
-      <ul className="space-y-1 text-sm mb-4">
-        <li><strong>Uptime:</strong> {formatUptime(status.uptime)}</li>
-        <li><strong>Load Average:</strong> {status.load.join(", ")}</li>
-        <li><strong>Memory Used:</strong> {memoryUsedPercent}%</li>
+    <div className="p-6 bg-zinc-800 text-white rounded-xl shadow-md">
+      <h2 className="text-xl font-semibold mb-4">📊 System Status</h2>
+      <ul className="space-y-1 text-sm mb-4 text-zinc-300">
+        <li><span className="font-semibold text-white">Uptime:</span> {formatUptime(status.uptime)}</li>
+        <li><span className="font-semibold text-white">Load Average:</span> {status.load.join(", ")}</li>
+        <li><span className="font-semibold text-white">Memory Used:</span> {memoryUsedPercent}%</li>
       </ul>
 
-      <h3 className="text-md font-semibold mb-1">Disk Usage</h3>
-      <ul className="space-y-1 text-sm">
+      <h3 className="text-md font-semibold mb-2 text-white">💽 Disk Usage</h3>
+      <ul className="space-y-2 text-sm">
         {status.disks.map((disk, index) => (
-          <li key={index} className="border-b border-gray-700 pb-1">
-            <strong>{disk.mountpoint}</strong> ({disk.filesystem}) – {disk.usePercent} used
+          <li
+            key={index}
+            className="bg-black/40 p-2 rounded flex justify-between items-center text-sm"
+          >
+            <span className="font-mono text-zinc-100">
+              {disk.mountpoint} <span className="text-zinc-400">({disk.filesystem})</span>
+            </span>
+            <span className="text-green-400 font-bold">{disk.usePercent} used</span>
           </li>
         ))}
       </ul>
