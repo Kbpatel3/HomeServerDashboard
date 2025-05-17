@@ -92,79 +92,77 @@ export default function FileBrowserCard() {
 
   return (
     <div
-      className="p-4 bg-gray-800 text-white rounded shadow-md max-h-[600px] overflow-auto"
+      className="p-6 bg-zinc-800 text-zinc-100 rounded-xl shadow-lg max-h-[600px] overflow-auto"
       onDragOver={(e) => e.preventDefault()}
       onDrop={handleDrop}
     >
-      <h2 className="text-lg font-bold mb-2">Shared File Browser</h2>
+      <div className="flex items-center justify-between mb-3">
+        <h2 className="text-xl font-semibold">📂 Shared File Browser</h2>
+        <button
+          onClick={handleZipDownload}
+          className="bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded text-sm"
+        >
+          📦 Download as ZIP
+        </button>
+      </div>
 
-      <div className="flex justify-between items-center mb-2 text-sm">
-        <span className="text-gray-400">Path: /{currentPath || ""}</span>
+      <div className="flex items-center justify-between mb-2 text-sm text-zinc-400">
+        <span>Path: /{currentPath}</span>
         {currentPath && (
-          <button className="text-blue-400 hover:underline" onClick={handleGoBack}>
-            ⬅️ Up
+          <button className="hover:underline text-blue-400" onClick={handleGoBack}>
+            ⬅ Up
           </button>
         )}
       </div>
 
-      <div className="mb-3 flex gap-2">
+      <div className="flex gap-2 mb-3">
         <input
           type="text"
-          className="text-black px-2 py-1 rounded w-full"
+          className="bg-zinc-900 text-sm px-3 py-1 rounded w-full placeholder-gray-400"
           placeholder="Search..."
           value={searchTerm}
           onChange={handleSearch}
         />
+        <input
+          type="file"
+          multiple
+          ref={fileInputRef}
+          className="hidden"
+          onChange={handleUpload}
+        />
         <button
-          className="bg-green-600 hover:bg-green-700 px-3 py-1 rounded"
-          onClick={handleZipDownload}
+          className="bg-green-600 hover:bg-green-700 px-3 py-1 rounded text-sm"
+          onClick={() => fileInputRef.current.click()}
         >
-          📦 ZIP
+          ⬆ Upload
         </button>
       </div>
 
-      <input
-        type="file"
-        multiple
-        ref={fileInputRef}
-        className="text-sm text-gray-200 mb-3"
-        onChange={handleUpload}
-      />
-
-      <ul className="text-sm space-y-1 font-mono">
+      <ul className="space-y-2 text-sm font-mono">
         {filteredFiles.map((item, index) => (
           <li
             key={index}
-            className="flex justify-between items-center hover:bg-gray-700 px-2 py-1 rounded"
+            className="flex justify-between items-center px-3 py-2 bg-zinc-900 rounded hover:bg-zinc-700"
           >
             <span
-              className={`cursor-pointer flex-grow ${
-                item.type === "directory" ? "text-blue-400" : "text-gray-200"
+              className={`cursor-pointer ${
+                item.type === "directory" ? "text-blue-400" : "text-zinc-200"
               }`}
               onClick={() => handleOpen(item)}
             >
-              {item.type === "directory" ? "📁 " : "📄 "}
-              {item.name}
+              {item.type === "directory" ? "📁" : "📄"} {item.name}
             </span>
             {item.type === "file" && (
-              <div className="flex flex-col text-right text-xs text-gray-400 w-32 shrink-0">
-                <span>{formatSize(item.size)}</span>
-                <span>{formatDate(item.mtime)}</span>
+              <div className="text-right text-xs text-zinc-400 w-40">
+                <div>{formatSize(item.size)}</div>
+                <div>{formatDate(item.mtime)}</div>
                 <button
-                  className="text-green-400 hover:underline text-sm"
+                  className="text-green-400 hover:underline"
                   onClick={() => handleDownload(item)}
                 >
                   Download
                 </button>
               </div>
-            )}
-            {item.type === "file" && (
-              <button
-                className="text-green-400 hover:underline"
-                onClick={() => handleDownload(item)}
-              >
-                Download
-              </button>
             )}
           </li>
         ))}

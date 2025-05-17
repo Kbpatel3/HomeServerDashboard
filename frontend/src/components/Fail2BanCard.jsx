@@ -45,33 +45,47 @@ export default function Fail2BanCard() {
       .catch(() => alert("Failed to restart Fail2Ban"));
   };
 
-  if (loading) return <div className="p-4 bg-gray-800 rounded">Loading...</div>;
+  if (loading) {
+    return (
+      <div className="bg-zinc-800 p-6 rounded-lg shadow-md text-zinc-200">
+        <p>Loading Fail2Ban data...</p>
+      </div>
+    );
+  }
 
   return (
-    <div className="p-4 bg-gray-800 text-white rounded shadow-md max-h-[600px] overflow-auto">
-      <h2 className="text-lg font-bold mb-2">Fail2Ban Status</h2>
-      <pre className="text-sm mb-4 whitespace-pre-wrap">{status}</pre>
+    <div className="bg-zinc-800 p-6 rounded-xl shadow-lg text-zinc-100 flex flex-col gap-4 max-h-[600px] overflow-auto">
+      <div className="flex items-center justify-between">
+        <h2 className="text-xl font-semibold">Fail2Ban Status</h2>
+        <button
+          onClick={handleRestart}
+          className="bg-red-600 hover:bg-red-700 text-sm text-white font-medium py-1 px-3 rounded transition"
+        >
+          Restart
+        </button>
+      </div>
 
-      <button
-        className="bg-red-600 hover:bg-red-700 px-4 py-1 rounded mb-4"
-        onClick={handleRestart}
-      >
-        Restart Fail2Ban
-      </button>
+      <div className="bg-zinc-900 p-4 rounded-md text-sm font-mono whitespace-pre-wrap border border-zinc-700">
+        {status}
+      </div>
 
-      <h3 className="text-md font-semibold mb-1">Recent Logs</h3>
-      <div className="text-xs bg-gray-900 p-2 rounded whitespace-pre-wrap max-h-[300px] overflow-y-auto font-mono">
-        {logs?.split("\n").map((line, index) => {
-          const isBan = /ban/i.test(line);
-          return (
-            <div
-              key={index}
-              className={isBan ? "text-red-400 font-bold" : "text-gray-300"}
-            >
-              {line}
-            </div>
-          );
-        })}
+      <div>
+        <h3 className="text-lg font-medium mb-2">Recent Logs</h3>
+        <div className="bg-black p-3 rounded-md text-xs font-mono max-h-60 overflow-y-auto border border-zinc-700">
+          {logs?.split("\n").map((line, index) => {
+            const isBan = /ban/i.test(line);
+            return (
+              <div
+                key={index}
+                className={
+                  isBan ? "text-red-400 font-semibold" : "text-zinc-400"
+                }
+              >
+                {line}
+              </div>
+            );
+          })}
+        </div>
       </div>
     </div>
   );
