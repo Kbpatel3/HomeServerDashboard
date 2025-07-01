@@ -30,16 +30,16 @@ export default function GameServerControlCard() {
     <div className="bg-gray-800 text-white p-4 rounded-2xl shadow-md">
       <h2 className="text-xl font-semibold mb-3">🎮 Vintage Story Server</h2>
       <div className="flex space-x-3 mb-2">
-        <Button className="bg-green-600 px-4 py-2 rounded text-white hover:bg-green-700" onClick={() => handleAction("start")} disabled={loading}>
+        <button className="bg-green-600 px-4 py-2 rounded text-white hover:bg-green-700" onClick={() => handleAction("start")} disabled={loading}>
           Start
-        </Button>
-        <Button
+        </button>
+        <button
           className="bg-red-600 px-4 py-2 rounded text-white hover:bg-red-700"
           onClick={() => handleAction("stop")}
           disabled={loading}
         >
           Stop
-        </Button>
+        </button>
       </div>
       <p className="text-sm text-gray-300 mb-1">Status: {status}</p>
       <pre className="bg-black text-green-300 p-2 rounded max-h-40 overflow-y-auto text-xs whitespace-pre-wrap">
