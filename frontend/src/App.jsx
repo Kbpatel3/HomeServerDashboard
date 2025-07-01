@@ -3,6 +3,7 @@ import SystemInfoCard from "./components/SystemInfoCard";
 import Fail2BanCard from "./components/Fail2BanCard";
 import ServiceControlsCard from "./components/ServiceControlsCard";
 import FileBrowserCard from "./components/FileBrowserCard";
+import GameServerControlCard from "./components/GameServerControlCard";
 
 export default function App() {
   return (
@@ -20,6 +21,7 @@ export default function App() {
 
         <div className="my-10">
           <ServiceControlsCard />
+          <GameServerControlCard />
         </div>
 
         <div>

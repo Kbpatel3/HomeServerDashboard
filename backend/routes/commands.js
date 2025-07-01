@@ -34,4 +34,32 @@ router.post("/update", (req, res) => {
     });
 });
 
+// Start Vintage Story server
+router.post('/vintagestory/start', (req, res) => {
+    const cmd = `sudo su - vintagestory -c 'cd /home/vintagestory/server && ./server.sh start'`;
+    exec(cmd, (error, stdout, stderr) => {
+        if (error) {
+            console.error(stderr);
+            return res.status(500).json({ success: false, output: stderr });
+        }
+
+        const success = stdout.includes("VintagestoryServer.dll is up and running!");
+        res.json({ success, output: stdout });
+    });
+});
+
+// Stop Vintage Story server
+router.post('/vintagestory/stop', (req, res) => {
+    const cmd = `sudo su - vintagestory -c 'cd /home/vintagestory/server && ./server.sh stop'`;
+    exec(cmd, (error, stdout, stderr) => {
+        if (error) {
+            console.error(stderr);
+            return res.status(500).json({ success: false, output: stderr });
+        }
+
+        const success = stdout.includes("VintagestoryServer.dll is stopped.");
+        res.json({ success, output: stdout });
+    });
+});
+
 module.exports = router;
